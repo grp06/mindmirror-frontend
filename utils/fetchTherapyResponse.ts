@@ -11,16 +11,17 @@ export async function fetchTherapyResponse({
   plugin,
 }: FetchTherapyResponseParams): Promise<TherapyResponse> {
   try {
-    const API_BASE_URL = getApiBaseUrl(plugin.settings);
-    console.log('Making API request to:', `${API_BASE_URL}/auth/openai/`)
+    const userApiKey = (plugin as MindMirrorPlugin).settings.apiKey
+    const endpoint = userApiKey ? 'openai_with_api_key' : 'openai'
+    const API_BASE_URL = getApiBaseUrl(plugin.settings)
+    const apiUrl = `${API_BASE_URL}/api/${endpoint}/`
+
+    console.log('Making API request to:', apiUrl)
 
     const notes = await plugin.getRecentNotes(noteRange)
     const notesContent = notes.join('\n\n')
 
     const authToken = localStorage.getItem('accessToken')
-    const userApiKey = (plugin as MindMirrorPlugin).settings.apiKey
-
-    const endpoint = userApiKey ? 'openai_with_api_key' : 'openai'
     const headers = {
       'Content-Type': 'application/json',
       Authorization: authToken ? `Bearer ${authToken}` : `Bearer ${userApiKey}`,
@@ -33,7 +34,7 @@ export async function fetchTherapyResponse({
     });
 
     const response = await requestUrl({
-      url: `${API_BASE_URL}/auth/${endpoint}`,
+      url: apiUrl,
       method: 'POST',
       headers: headers,
       body: JSON.stringify({
@@ -46,7 +47,7 @@ export async function fetchTherapyResponse({
     })
     .catch(error => {
       console.error('Request failed:', {
-        url: `${API_BASE_URL}/auth/${endpoint}`,
+        url: apiUrl,
         status: error.status,
         message: error.message,
         headers: headers,

@@ -9,7 +9,7 @@ export interface MindMirrorSettings {
 }
 
 export const DEFAULT_SETTINGS: MindMirrorSettings = {
-  isDevelopment: false,
+  isDevelopment: process.env.NODE_ENV === 'development',
   apiKey: '',
   apiEndpoints: {
     development: 'http://localhost:8000',

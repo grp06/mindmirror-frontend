@@ -18,6 +18,7 @@ import MindMirrorPlugin from '../main'
 import { ExtendedApp } from '../types'
 import styled from 'styled-components'
 import { requestUrl } from 'obsidian'
+import { getApiBaseUrl } from '../constants'
 
 const StyledNotice = styled.div`
   position: fixed;
@@ -73,8 +74,8 @@ const SettingsTabContent: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    fetchUserEmail(authToken, setAuthToken, setEmail)
-  }, [authToken, setAuthToken, setEmail])
+    fetchUserEmail(authToken, setAuthToken, setEmail, plugin)
+  }, [authToken, setAuthToken, setEmail, plugin])
 
   const handleSaveButtonClick = async () => {
     plugin.settings.apiKey = apiKey
@@ -101,12 +102,13 @@ const SettingsTabContent: React.FC = () => {
   }> => {
     try {
       const endpoint = isSignUp ? 'registration/' : 'login/'
+      const apiBaseUrl = getApiBaseUrl(plugin.settings)
 
       const body = isSignUp
         ? { email, password1: password, password2: password }
         : { email, password }
       const response = await requestUrl({
-        url: `https://trymindmirror.com/api/auth/${endpoint}`,
+        url: `${apiBaseUrl}/api/${endpoint}`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,8 +160,9 @@ const SettingsTabContent: React.FC = () => {
 
   const handleForgotPassword = async (email: string) => {
     try {
+      const apiBaseUrl = getApiBaseUrl(plugin.settings)
       const response = await requestUrl({
-        url: 'https://trymindmirror.com/api/auth/password/reset/',
+        url: `${apiBaseUrl}/api/password/reset/`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -184,8 +187,9 @@ const SettingsTabContent: React.FC = () => {
   const handleAuthButtonClick = async () => {
     if (authToken) {
       try {
+        const apiBaseUrl = getApiBaseUrl(plugin.settings)
         await requestUrl({
-          url: 'https://trymindmirror.com/api/auth/logout/',
+          url: `${apiBaseUrl}/api/logout/`,
           method: 'POST',
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -216,7 +220,7 @@ const SettingsTabContent: React.FC = () => {
     const storedToken = localStorage.getItem('accessToken')
     if (storedToken) {
       setAuthToken(storedToken)
-      fetchUserEmail(storedToken, setAuthToken, setEmail)
+      fetchUserEmail(storedToken, setAuthToken, setEmail, plugin)
     }
   }, [])
 
@@ -230,8 +234,9 @@ const SettingsTabContent: React.FC = () => {
     if (!refreshToken) return false
 
     try {
+      const apiBaseUrl = getApiBaseUrl(plugin.settings)
       const response = await requestUrl({
-        url: 'https://trymindmirror.com/api/auth/token/refresh/',
+        url: `${apiBaseUrl}/api/token/refresh/`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

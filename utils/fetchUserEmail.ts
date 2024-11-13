@@ -1,14 +1,18 @@
+import { getApiBaseUrl } from '@/constants'
 import { Notice, requestUrl } from 'obsidian'
+import { MindMirrorPlugin } from '../types'
 
 export async function fetchUserEmail(
   authToken: string | null,
   setAuthToken: (token: string | null) => void,
-  setEmail: (email: string) => void
+  setEmail: (email: string) => void,
+  plugin: MindMirrorPlugin
 ): Promise<void> {
   if (authToken) {
     try {
+      const apiBaseUrl = getApiBaseUrl(plugin.settings)
       const response = await requestUrl({
-        url: 'https://trymindmirror.com/api/auth/user_info/',
+        url: `${apiBaseUrl}/api/user_info/`,
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
