@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
-import MindMirrorPlugin from './main'
-
-import { App as ObsidianApp } from 'obsidian'
+import { App as ObsidianApp, Plugin } from 'obsidian'
+import { MindMirrorSettings } from './settings'
+import { Root } from 'react-dom/client'
 
 export interface ExtendedApp extends ObsidianApp {
   setting: {
@@ -86,9 +86,6 @@ export interface AppProviderProps {
   children: ReactNode
 }
 
-export interface PluginSettings {
-  apiKey: string
-}
 
 export interface FetchTherapyResponseParams {
   prompt: string
@@ -102,4 +99,17 @@ export interface TherapyResponse {
   content: string
   remaining_budget: number
   spending_limit: number
+}
+
+export interface MindMirrorPlugin extends Plugin {
+  settings: MindMirrorSettings;
+  root: Root | null;
+  authMessage: string;
+  
+  // Methods
+  loadSettings: () => Promise<void>;
+  saveSettings: () => Promise<void>;
+  getRecentNotes: (range: string) => Promise<string[]>;
+  handleEmotionClick: (emotion: string) => Promise<void>;
+  setAuthMessage: (message: string) => void;
 }

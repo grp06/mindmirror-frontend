@@ -82,9 +82,6 @@ const DropdownContainer: React.FC = () => {
       }
     }
 
-  useEffect(() => {
-    console.log('isUIVisible changed:', isUIVisible);
-  }, [isUIVisible]);
 
   if (!isUIVisible) return null;
 

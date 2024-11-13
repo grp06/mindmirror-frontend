@@ -4,13 +4,13 @@ import { createRoot, Root } from 'react-dom/client'
 import DropdownContainer from './components/DropdownContainer'
 import SettingsTab from './components/SettingsTab'
 import { AppProvider } from './context/AppContext'
-import { PluginSettings, ExtendedApp } from './types'
+import { ExtendedApp } from './types'
+import { DEFAULT_SETTINGS, MindMirrorSettings } from './settings'
+import { MindMirrorPlugin } from './types'
 
-export default class MindMirrorPlugin extends Plugin {
+export default class MindMirrorPluginImpl extends Plugin implements MindMirrorPlugin {
   root: Root | null = null
-  settings: PluginSettings = {
-    apiKey: '',
-  }
+  settings: MindMirrorSettings = DEFAULT_SETTINGS
   authMessage = ''
 
   async getRecentNotes(range: string): Promise<string[]> {
@@ -55,6 +55,7 @@ export default class MindMirrorPlugin extends Plugin {
 
     return noteContents
   }
+
   async handleEmotionClick(emotion: string) {
     const view = this.app.workspace.getActiveViewOfType(MarkdownView)
     if (!view) return
@@ -108,7 +109,7 @@ export default class MindMirrorPlugin extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, this.settings, await this.loadData())
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
   }
 
   async saveSettings() {

@@ -63,16 +63,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   }, [plugin])
 
   useEffect(() => {
-    console.log('Auth token changed:', authToken);
     setIsUIVisible(!!authToken);
-    console.log('Setting UI visible:', !!authToken);
   }, [authToken]);
 
   useEffect(() => {
     const handleAuthStatus = (event: CustomEvent) => {
-      console.log('Auth status event received:', event.detail);
       setIsUIVisible(event.detail.isAuthenticated);
-      console.log('Setting UI visible:', event.detail.isAuthenticated);
     };
 
     document.addEventListener('auth-status-changed', handleAuthStatus as EventListener);

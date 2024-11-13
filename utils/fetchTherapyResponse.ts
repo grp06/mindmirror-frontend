@@ -1,6 +1,7 @@
 import { FetchTherapyResponseParams, TherapyResponse } from '../types'
 import MindMirrorPlugin from '../main'
 import { requestUrl } from 'obsidian'
+import { getApiBaseUrl } from '../constants'
 
 export async function fetchTherapyResponse({
   prompt,
@@ -10,6 +11,9 @@ export async function fetchTherapyResponse({
   plugin,
 }: FetchTherapyResponseParams): Promise<TherapyResponse> {
   try {
+    const API_BASE_URL = getApiBaseUrl(plugin.settings);
+    console.log('Making API request to:', `${API_BASE_URL}/auth/openai/`)
+
     const notes = await plugin.getRecentNotes(noteRange)
     const notesContent = notes.join('\n\n')
 
@@ -22,8 +26,14 @@ export async function fetchTherapyResponse({
       Authorization: authToken ? `Bearer ${authToken}` : `Bearer ${userApiKey}`,
     }
 
+    console.log('Auth details:', {
+      hasAuthToken: !!authToken,
+      hasApiKey: !!userApiKey,
+      endpoint: endpoint
+    });
+
     const response = await requestUrl({
-      url: `https://trymindmirror.com/api/auth/${endpoint}/`,
+      url: `${API_BASE_URL}/auth/${endpoint}`,
       method: 'POST',
       headers: headers,
       body: JSON.stringify({
@@ -34,6 +44,16 @@ export async function fetchTherapyResponse({
         user_api_key: userApiKey,
       }),
     })
+    .catch(error => {
+      console.error('Request failed:', {
+        url: `${API_BASE_URL}/auth/${endpoint}`,
+        status: error.status,
+        message: error.message,
+        headers: headers,
+        endpoint: endpoint
+      });
+      throw error;
+    });
 
     const data = response.json
 
