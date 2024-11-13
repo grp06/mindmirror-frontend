@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import MyPlugin from './main'
+import MindMirrorPlugin from './main'
 
 import { App as ObsidianApp } from 'obsidian'
 
@@ -49,7 +49,7 @@ export interface AppContextProps {
   length: string
   modalState: ModalState
   noteRange: string
-  plugin: MyPlugin
+  plugin: MindMirrorPlugin
   removeApiKey: () => void
   result: string
   setApiKey: (apiKey: string) => void
@@ -82,7 +82,7 @@ export interface AppContextProps {
 }
 
 export interface AppProviderProps {
-  plugin: MyPlugin
+  plugin: MindMirrorPlugin
   children: ReactNode
 }
 
@@ -95,7 +95,7 @@ export interface FetchTherapyResponseParams {
   noteRange: string
   length: string
   vibe: string
-  plugin: MyPlugin
+  plugin: MindMirrorPlugin
 }
 
 export interface TherapyResponse {

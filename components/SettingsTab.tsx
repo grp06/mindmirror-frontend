@@ -14,7 +14,7 @@ import {
   EmailDisplay,
 } from './StyledComponents'
 import { fetchUserEmail } from '../utils/fetchUserEmail'
-import MyPlugin from '../main'
+import MindMirrorPlugin from '../main'
 import { ExtendedApp } from '../types'
 import styled from 'styled-components'
 import { requestUrl } from 'obsidian'
@@ -42,19 +42,19 @@ const StyledNotice = styled.div`
       opacity: 1;
     }
   }
-`;
+`
 
 const showCustomNotice = (message: string) => {
-  const notice = document.createElement('div');
-  const root = createRoot(notice);
-  root.render(<StyledNotice>{message}</StyledNotice>);
-  document.body.appendChild(notice);
+  const notice = document.createElement('div')
+  const root = createRoot(notice)
+  root.render(<StyledNotice>{message}</StyledNotice>)
+  document.body.appendChild(notice)
 
   setTimeout(() => {
-    root.unmount();
-    document.body.removeChild(notice);
-  }, 3000);
-};
+    root.unmount()
+    document.body.removeChild(notice)
+  }, 3000)
+}
 
 const SettingsTabContent: React.FC = () => {
   const {
@@ -113,7 +113,7 @@ const SettingsTabContent: React.FC = () => {
         },
         body: JSON.stringify(body),
       })
-      
+
       const data = response.json
 
       if (data.access_token && data.refresh_token) {
@@ -121,7 +121,7 @@ const SettingsTabContent: React.FC = () => {
         localStorage.setItem('refreshToken', data.refresh_token)
         setAuthToken(data.access_token)
         setEmail('')
-        
+
         handleCloseModal()
         setTimeout(() => {
           showCustomNotice(
@@ -129,9 +129,9 @@ const SettingsTabContent: React.FC = () => {
           )
         }, 100)
         const event = new CustomEvent('auth-status-changed', {
-          detail: { isAuthenticated: true }
-        });
-        document.dispatchEvent(event);
+          detail: { isAuthenticated: true },
+        })
+        document.dispatchEvent(event)
         return {
           success: true,
           tokens: {
@@ -198,11 +198,11 @@ const SettingsTabContent: React.FC = () => {
         setIsUIVisible(false)
         showCustomNotice('Signed out successfully')
         setIsModalOpen(false)
-        
+
         const event = new CustomEvent('auth-status-changed', {
-          detail: { isAuthenticated: false }
-        });
-        document.dispatchEvent(event);
+          detail: { isAuthenticated: false },
+        })
+        document.dispatchEvent(event)
       } catch (error) {
         console.error('Logout failed:', error)
         showCustomNotice('Logout failed')
@@ -226,8 +226,8 @@ const SettingsTabContent: React.FC = () => {
   }
 
   const refreshToken = async (): Promise<boolean> => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) return false;
+    const refreshToken = localStorage.getItem('refreshToken')
+    if (!refreshToken) return false
 
     try {
       const response = await requestUrl({
@@ -237,20 +237,20 @@ const SettingsTabContent: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ refresh: refreshToken }),
-      });
+      })
 
-      const data = response.json;
+      const data = response.json
       if (data.access) {
-        localStorage.setItem('accessToken', data.access);
-        setAuthToken(data.access);
-        return true;
+        localStorage.setItem('accessToken', data.access)
+        setAuthToken(data.access)
+        return true
       }
-      return false;
+      return false
     } catch (error) {
-      console.error('Token refresh failed:', error);
-      return false;
+      console.error('Token refresh failed:', error)
+      return false
     }
-  };
+  }
 
   return (
     <Wrapper>
@@ -289,10 +289,10 @@ const SettingsTabContent: React.FC = () => {
 }
 
 export default class SettingsTab extends PluginSettingTab {
-  plugin: MyPlugin
+  plugin: MindMirrorPlugin
   root: Root | null = null
 
-  constructor(app: ExtendedApp, plugin: MyPlugin) {
+  constructor(app: ExtendedApp, plugin: MindMirrorPlugin) {
     super(app, plugin)
     this.plugin = plugin
   }

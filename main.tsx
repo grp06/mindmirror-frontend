@@ -6,7 +6,7 @@ import SettingsTab from './components/SettingsTab'
 import { AppProvider } from './context/AppContext'
 import { PluginSettings, ExtendedApp } from './types'
 
-export default class MyPlugin extends Plugin {
+export default class MindMirrorPlugin extends Plugin {
   root: Root | null = null
   settings: PluginSettings = {
     apiKey: '',
@@ -21,7 +21,7 @@ export default class MyPlugin extends Plugin {
 
     const dateRegex = /^\d{4}-\d{2}-\d{2}/
     const filteredFiles = files.filter(
-      (file) => file.name.startsWith('2024') && dateRegex.test(file.name),
+      (file) => file.name.startsWith('2024') && dateRegex.test(file.name)
     )
 
     filteredFiles.sort((a, b) => b.stat.mtime - a.stat.mtime)
@@ -50,7 +50,7 @@ export default class MyPlugin extends Plugin {
       notesToInclude.map(async (file) => {
         const content = await this.app.vault.read(file)
         return `# ${file.basename}\n\n${content}`
-      }),
+      })
     )
 
     return noteContents
@@ -67,7 +67,7 @@ export default class MyPlugin extends Plugin {
     if (currentContent.startsWith('# Daily Emotions')) {
       const lines = currentContent.split('\n')
       const index = lines.findIndex((line) =>
-        line.startsWith('# Daily Emotions'),
+        line.startsWith('# Daily Emotions')
       )
       lines.splice(index + 1, 0, formattedEmotion)
       updatedContent = lines.join('\n')
@@ -86,22 +86,24 @@ export default class MyPlugin extends Plugin {
     const reactContainer = document.createElement('div')
     document.body.appendChild(reactContainer)
     this.root = createRoot(reactContainer)
-    
+
     // Check for existing auth token
     const existingToken = localStorage.getItem('accessToken')
-    
+
     this.root.render(
       <AppProvider plugin={this}>
         <DropdownContainer />
-      </AppProvider>,
+      </AppProvider>
     )
-    
+
     if (existingToken) {
       // Ensure UI is visible if user is already authenticated
       setTimeout(() => {
-        const event = new CustomEvent('auth-status-changed', { detail: { isAuthenticated: true } });
-        document.dispatchEvent(event);
-      }, 0);
+        const event = new CustomEvent('auth-status-changed', {
+          detail: { isAuthenticated: true },
+        })
+        document.dispatchEvent(event)
+      }, 0)
     }
   }
 

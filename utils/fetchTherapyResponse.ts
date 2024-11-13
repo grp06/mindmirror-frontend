@@ -1,5 +1,5 @@
 import { FetchTherapyResponseParams, TherapyResponse } from '../types'
-import MyPlugin from '../main'
+import MindMirrorPlugin from '../main'
 import { requestUrl } from 'obsidian'
 
 export async function fetchTherapyResponse({
@@ -14,7 +14,7 @@ export async function fetchTherapyResponse({
     const notesContent = notes.join('\n\n')
 
     const authToken = localStorage.getItem('accessToken')
-    const userApiKey = (plugin as MyPlugin).settings.apiKey
+    const userApiKey = (plugin as MindMirrorPlugin).settings.apiKey
 
     const endpoint = userApiKey ? 'openai_with_api_key' : 'openai'
     const headers = {
@@ -39,7 +39,9 @@ export async function fetchTherapyResponse({
 
     if (response.status !== 200) {
       if (response.status === 401) {
-        throw new Error('Unauthorized: Please check your API key or login status')
+        throw new Error(
+          'Unauthorized: Please check your API key or login status'
+        )
       }
       throw new Error(data.error || `Server error: ${response.status}`)
     }
