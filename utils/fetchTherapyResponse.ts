@@ -59,6 +59,7 @@ export async function fetchTherapyResponse({
       content: data.choices[0].message.content,
       remaining_budget: data.remaining_budget || 0,
       spending_limit: data.spending_limit || 0,
+      reflections_count: data.reflections_count || 0,
     }
   } catch (error) {
     throw new Error(error.message || 'Failed to generate therapy response')

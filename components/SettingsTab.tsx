@@ -73,6 +73,34 @@ const Answer = styled.div`
   }
 `
 
+const StatsContainer = styled.div`
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--background-modifier-form-field);
+  border-radius: 8px;
+  border: 1px solid var(--background-modifier-border);
+`
+
+const StatItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--background-modifier-border);
+  }
+`
+
+const StatLabel = styled.span`
+  color: var(--text-muted);
+`
+
+const StatValue = styled.span`
+  color: var(--text-normal);
+  font-weight: 500;
+`
+
 const showCustomNotice = (message: string) => {
   const notice = document.createElement('div')
   const root = createRoot(notice)
@@ -101,10 +129,35 @@ const SettingsTabContent: React.FC = () => {
   } = useAppContext()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [reflectionsCount, setReflectionsCount] = useState<number>(0)
 
   useEffect(() => {
     fetchUserEmail(authToken, setAuthToken, setEmail, plugin)
   }, [authToken, setAuthToken, setEmail, plugin])
+
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      if (authToken) {
+        try {
+          const apiBaseUrl = getApiBaseUrl(plugin.settings)
+          const response = await requestUrl({
+            url: `${apiBaseUrl}/api/user_info/`,
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          })
+
+          if (response.status === 200) {
+            setReflectionsCount(response.json.reflections_count || 0)
+          }
+        } catch (error) {
+          console.error('Failed to fetch user stats:', error)
+        }
+      }
+    }
+
+    fetchUserStats()
+  }, [authToken])
 
   const handleSaveButtonClick = async () => {
     plugin.settings.apiKey = apiKey
@@ -372,7 +425,17 @@ const SettingsTabContent: React.FC = () => {
         refreshToken={refreshToken}
         startOnboarding={startOnboarding}
       />
-      {authToken && <EmailDisplay>Signed in as: {email}</EmailDisplay>}
+      {authToken && (
+        <>
+          <EmailDisplay>Signed in as: {email}</EmailDisplay>
+          <StatsContainer>
+            <StatItem>
+              <StatLabel>Total Reflections</StatLabel>
+              <StatValue>{reflectionsCount}</StatValue>
+            </StatItem>
+          </StatsContainer>
+        </>
+      )}
 
       <HelpSection>
         {faqData.map((item, index) => (

@@ -118,6 +118,7 @@ export interface TherapyResponse {
   content: string
   remaining_budget: number
   spending_limit: number
+  reflections_count: number
 }
 
 export interface MindMirrorPlugin extends Plugin {

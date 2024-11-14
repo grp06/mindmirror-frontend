@@ -137,7 +137,7 @@ export const ResponseModalContainer = styled.div`
   font-family: Arial, sans-serif;
   color: #f0f0f0;
   width: 360px;
-  z-index: 1000;
+  z-index: 50;
   display: flex;
   flex-direction: column;
 `
@@ -201,6 +201,7 @@ export const ModalWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 400;
 `
 
 export const ModalContent = styled.div`
@@ -210,6 +211,7 @@ export const ModalContent = styled.div`
   border-radius: 8px;
   width: 300px;
   position: relative;
+  z-index: 450;
 `
 
 export const CloseButton = styled.button`
@@ -287,7 +289,7 @@ export const BarContainer = styled.div`
   background-color: #222;
   right: 325px;
   width: calc(80% - 325px);
-  z-index: 1000;
+  z-index: 40;
   border-radius: 8px;
 `
 
@@ -303,7 +305,7 @@ export const SecondaryPane = styled.div<{
   bottom: 35px;
   right: 317px;
   width: calc(80% - 317px);
-  z-index: 999;
+  z-index: 39;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
 `
@@ -314,7 +316,7 @@ export const FloatingEmoji = styled.div<{ $isVisible: boolean }>`
   right: 20px;
   font-size: 24px;
   cursor: pointer;
-  z-index: 1001;
+  z-index: 41;
   display: ${(props) => (props.$isVisible ? 'block' : 'none')};
 `
 
@@ -386,7 +388,7 @@ export const FloatingExpandButton = styled.button<{ $isCollapsed: boolean }>`
   opacity: ${props => props.$isCollapsed ? 1 : 0};
   visibility: ${props => props.$isCollapsed ? 'visible' : 'hidden'};
   transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-  z-index: 9999;
+  z-index: 45;
   pointer-events: ${props => props.$isCollapsed ? 'auto' : 'none'};
   color: #f0f0f0;
   display: flex;
@@ -412,7 +414,7 @@ export const SignInPrompt = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: #f0f0f0;
-  z-index: 1000;
+  z-index: 50;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -435,7 +437,7 @@ export const OnboardingOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 400;
 `
 
 export const OnboardingCard = styled.div`
