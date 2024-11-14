@@ -16,8 +16,6 @@ export async function fetchTherapyResponse({
     const API_BASE_URL = getApiBaseUrl(plugin.settings)
     const apiUrl = `${API_BASE_URL}/api/${endpoint}/`
 
-    console.log('Making API request to:', apiUrl)
-
     const notes = await plugin.getRecentNotes(noteRange)
     const notesContent = notes.join('\n\n')
 
@@ -26,12 +24,6 @@ export async function fetchTherapyResponse({
       'Content-Type': 'application/json',
       Authorization: authToken ? `Bearer ${authToken}` : `Bearer ${userApiKey}`,
     }
-
-    console.log('Auth details:', {
-      hasAuthToken: !!authToken,
-      hasApiKey: !!userApiKey,
-      endpoint: endpoint
-    });
 
     const response = await requestUrl({
       url: apiUrl,
@@ -44,17 +36,9 @@ export async function fetchTherapyResponse({
         vibe: vibe,
         user_api_key: userApiKey,
       }),
+    }).catch((error) => {
+      throw error
     })
-    .catch(error => {
-      console.error('Request failed:', {
-        url: apiUrl,
-        status: error.status,
-        message: error.message,
-        headers: headers,
-        endpoint: endpoint
-      });
-      throw error;
-    });
 
     const data = response.json
 
@@ -77,7 +61,6 @@ export async function fetchTherapyResponse({
       spending_limit: data.spending_limit || 0,
     }
   } catch (error) {
-    console.error('Error in fetchTherapyResponse:', error)
     throw new Error(error.message || 'Failed to generate therapy response')
   }
 }

@@ -63,11 +63,11 @@ const Question = styled.h3`
 
 const Answer = styled.div`
   color: var(--text-muted);
-  
+
   ol {
     margin-left: 20px;
   }
-  
+
   li {
     margin-bottom: 4px;
   }
@@ -172,16 +172,13 @@ const SettingsTabContent: React.FC = () => {
           },
         }
       } else if (data.error) {
-        console.error('Auth failed:', data.error)
         showCustomNotice(data.error || 'Authentication failed')
         return { success: false }
       } else {
-        console.error('Unexpected response format:', data)
         showCustomNotice('Unexpected server response')
         return { success: false }
       }
     } catch (error) {
-      console.error('Auth error:', error)
       showCustomNotice(error.message || 'Authentication failed')
       return { success: false }
     }
@@ -208,7 +205,6 @@ const SettingsTabContent: React.FC = () => {
         return false
       }
     } catch (error) {
-      console.error('Password reset failed:', error)
       showCustomNotice(error.message || 'Failed to send password reset email')
       return false
     }
@@ -238,7 +234,6 @@ const SettingsTabContent: React.FC = () => {
         })
         document.dispatchEvent(event)
       } catch (error) {
-        console.error('Logout failed:', error)
         showCustomNotice('Logout failed')
       }
     } else {
@@ -282,7 +277,6 @@ const SettingsTabContent: React.FC = () => {
       }
       return false
     } catch (error) {
-      console.error('Token refresh failed:', error)
       return false
     }
   }
@@ -298,29 +292,34 @@ const SettingsTabContent: React.FC = () => {
         'Search for "Mind Mirror" and install the plugin',
         'In Obsidian settings, scroll down the left sidebar to find "Mind Mirror"',
         'Click on Mind Mirror and create your account',
-        'Start using Mind Mirror for free!'
+        'Start using Mind Mirror for free!',
       ],
     },
     {
       question: 'What is Mind Mirror?',
-      answer: "Mind Mirror is an AI-powered journaling companion that provides insights and reflections based on your writing. It's designed to enhance your self-reflection practice with customizable therapy styles and approaches.",
+      answer:
+        "Mind Mirror is an AI-powered journaling companion that provides insights and reflections based on your writing. It's designed to enhance your self-reflection practice with customizable therapy styles and approaches.",
     },
     {
       question: 'How does Mind Mirror work?',
-      answer: 'Mind Mirror uses advanced AI to analyze your journal entries and provide thoughtful responses based on your chosen therapy style. Simply write your thoughts, and Mind Mirror will offer insights, questions, and perspectives to help deepen your self-reflection practice.',
+      answer:
+        'Mind Mirror uses advanced AI to analyze your journal entries and provide thoughtful responses based on your chosen therapy style. Simply write your thoughts, and Mind Mirror will offer insights, questions, and perspectives to help deepen your self-reflection practice.',
     },
     {
       question: 'Is my data private and secure?',
-      answer: 'Yes, your privacy is our top priority. All journal entries are encrypted, and we never share your personal data with third parties. You have complete control over your data, including the ability to delete it at any time.',
+      answer:
+        'Yes, your privacy is our top priority. All journal entries are encrypted, and we never share your personal data with third parties. You have complete control over your data, including the ability to delete it at any time.',
     },
     {
       question: 'How much does Mind Mirror cost?',
-      answer: "Mind Mirror offers a free tier with basic features and a premium subscription for advanced features. Visit our pricing page for detailed information about our subscription plans and what's included in each tier.",
+      answer:
+        "Mind Mirror offers a free tier with basic features and a premium subscription for advanced features. Visit our pricing page for detailed information about our subscription plans and what's included in each tier.",
     },
     {
       question: 'Using Your Own OpenAI API Key',
-      answer: "You can use Mind Mirror with your own OpenAI API key for unlimited usage, or use our provided API key for limited free access. To use your own key, simply paste it in the field above and click 'Save Settings'."
-    }
+      answer:
+        "You can use Mind Mirror with your own OpenAI API key for unlimited usage, or use our provided API key for limited free access. To use your own key, simply paste it in the field above and click 'Save Settings'.",
+    },
   ]
 
   return (
@@ -343,21 +342,20 @@ const SettingsTabContent: React.FC = () => {
         <SaveButton onClick={handleSaveButtonClick}>Save Settings</SaveButton>
         {apiKey && <Button onClick={removeApiKey}>Remove API Key</Button>}
         {authToken && (
-          <Button onClick={() => {
-            console.log('Restart Tutorial button clicked');
-            localStorage.removeItem('onboardingComplete');
-            console.log('onboardingComplete removed from localStorage');
-            startOnboarding();
-            console.log('startOnboarding called from button');
-            
-            // Dispatch auth event to trigger re-render
-            const event = new CustomEvent('auth-status-changed', {
-              detail: { isAuthenticated: true }
-            });
-            document.dispatchEvent(event);
-            
-            (plugin.app as ExtendedApp).setting.close();
-          }}>
+          <Button
+            onClick={() => {
+              localStorage.removeItem('onboardingComplete')
+              startOnboarding()
+
+              // Dispatch auth event to trigger re-render
+              const event = new CustomEvent('auth-status-changed', {
+                detail: { isAuthenticated: true },
+              })
+              document.dispatchEvent(event)
+
+              ;(plugin.app as ExtendedApp).setting.close()
+            }}
+          >
             Restart Tutorial
           </Button>
         )}
@@ -375,7 +373,7 @@ const SettingsTabContent: React.FC = () => {
         startOnboarding={startOnboarding}
       />
       {authToken && <EmailDisplay>Signed in as: {email}</EmailDisplay>}
-      
+
       <HelpSection>
         {faqData.map((item, index) => (
           <FAQItem key={index}>

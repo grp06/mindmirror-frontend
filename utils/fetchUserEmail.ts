@@ -21,13 +21,11 @@ export async function fetchUserEmail(
       if (response.status === 200) {
         setEmail(response.json.email)
       } else {
-        console.error('Failed to fetch user email')
         setAuthToken(null)
         setEmail('')
         new Notice('Failed to fetch user email')
       }
     } catch (error) {
-      console.error('Error fetching user email:', error)
       setAuthToken(null)
       setEmail('')
       new Notice('Error fetching user email')

@@ -56,13 +56,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   }));
 
   const startOnboarding = useCallback(() => {
-    console.log('startOnboarding called');
     const newState = {
       isComplete: false,
       currentStep: OnboardingStep.Privacy,
       isVisible: true
     };
-    console.log('Setting new onboarding state:', newState);
     setOnboarding(newState);
     localStorage.setItem('onboardingComplete', 'false');
   }, []);
@@ -89,16 +87,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({
 
   useEffect(() => {
     const handleAuthStatus = (event: CustomEvent) => {
-      console.log('Auth status changed:', event.detail);
-      console.log('Current onboarding state:', onboarding);
       setIsUIVisible(event.detail.isAuthenticated);
       
       if (event.detail.isAuthenticated) {
         const storedOnboarding = localStorage.getItem('onboardingComplete');
-        console.log('Stored onboarding state:', storedOnboarding);
         
         if (!storedOnboarding || !JSON.parse(storedOnboarding)) {
-          console.log('Starting onboarding flow...');
           startOnboarding();
         }
       }
@@ -149,7 +143,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({
       setResult(result.content)
       setModalState(ModalState.Show)
     } catch (error) {
-      console.error('Error generating therapy response:', error)
       setErrorMessage(error.message || 'Failed to generate response')
     } finally {
       setIsTherapistThinking(false)

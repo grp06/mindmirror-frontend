@@ -105,13 +105,13 @@ export default class MindMirrorPluginImpl extends Plugin implements MindMirrorPl
     
     // Check for existing auth token
     const existingToken = localStorage.getItem('accessToken')
-    console.log('Existing auth token found:', !!existingToken)
+    
 
     // Render our App component
     this.root.render(<App plugin={this} />)
 
     if (existingToken) {
-      console.log('Dispatching auth-status-changed event')
+      
       setTimeout(() => {
         const event = new CustomEvent('auth-status-changed', {
           detail: { isAuthenticated: true },
