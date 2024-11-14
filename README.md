@@ -1,5 +1,3 @@
-Here's the updated README with emphasis on data privacy and OpenAI processing:
-
 # Mind Mirror - Obsidian Plugin
 
 Mind Mirror is a powerful AI journaling tool that provides real-time feedback and insights on your writing. Choose the type of therapy, what type of insights you want, and get AI generations inside of Obsidian to help you dive deeper.
