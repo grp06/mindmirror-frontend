@@ -137,39 +137,47 @@ const SettingsTabContent: React.FC = () => {
     if (storedToken && (!authToken || storedToken !== authToken)) {
       setAuthToken(storedToken)
     }
-    if (authToken) {
-      if (plugin.settings.email) {
-        setEmail(plugin.settings.email)
-      }
+    if (authToken && !email) {
       fetchUserEmail(authToken, setAuthToken, setEmail, plugin)
+        .catch(() => {
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('refreshToken')
+          setAuthToken(null)
+          setEmail('')
+        })
     }
   }, [authToken])
 
   useEffect(() => {
     const fetchUserStats = async () => {
-      if (authToken) {
-        try {
-          const apiBaseUrl = getApiBaseUrl(plugin.settings)
-          const response = await requestUrl({
-            url: `${apiBaseUrl}/api/user_info/`,
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          })
+      if (!authToken) return
 
-          if (response.status === 200) {
-            console.log('Full response:', response)
-            const data = response.json
-            setReflectionsCount(data.reflections_count || 0)
-          }
-        } catch (error) {
-          console.error('Failed to fetch user stats:', error)
+      try {
+        const apiBaseUrl = getApiBaseUrl(plugin.settings)
+        const response = await requestUrl({
+          url: `${apiBaseUrl}/api/user_info/`,
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+
+        if (response.status === 200) {
+          const data = response.json
+          setReflectionsCount(data.reflections_count || 0)
         }
+      } catch (error) {
+        if (error.status === 401) {
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('refreshToken')
+          setAuthToken(null)
+          setEmail('')
+        }
+        console.error('Failed to fetch user stats:', error)
       }
     }
 
     fetchUserStats()
-  }, [authToken, setReflectionsCount])
+  }, [authToken])
 
   const handleSaveButtonClick = async () => {
     plugin.settings.apiKey = apiKey

@@ -41,6 +41,9 @@ export async function fetchUserEmail(
       
       await plugin.saveSettings()
     } else {
+      // Clear invalid token
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
       setAuthToken(null)
       setEmail('')
       if (setReflectionsCount) {
@@ -51,10 +54,14 @@ export async function fetchUserEmail(
       await plugin.saveSettings()
     }
   } catch (error) {
+    // Clear invalid token on error
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
     setAuthToken(null)
     setEmail('')
     plugin.settings.email = ''
     plugin.settings.reflectionsCount = 0
     await plugin.saveSettings()
+    throw error
   }
 }
