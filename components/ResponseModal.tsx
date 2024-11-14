@@ -106,9 +106,9 @@ const ResponseModal: React.FC = () => {
 			<CloseButton onClick={handleCloseModal}>×</CloseButton>
 			<ResponseContent>
 				{modalState === ModalState.Initial
-					? 'Click refresh to get AI feedback'
+					? 'Click the green refresh button to get AI feedback'
 						: isTherapistThinking
-							? 'Your therapist is pondering your situation...'
+							? 'Pondering your situation...'
 							: errorMessage
 								? errorMessage
 								: formatMarkdown(result)}

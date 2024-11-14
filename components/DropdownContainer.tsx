@@ -17,8 +17,9 @@ import {
   AdvancedText,
   CollapseButton,
   FloatingExpandButton,
+  HelpIcon,
 } from './StyledComponents'
-import { faCaretRight, faCaretDown, faExpand, faCompress } from '@fortawesome/free-solid-svg-icons'
+import { faCaretRight, faCaretDown, faExpand, faCompress, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import ResponseModal from './ResponseModal'
 import { therapyTypes, insightFilters, vibeOptions } from '../data'
 import CustomizableDropdown from './CustomizableDropdown'
@@ -172,6 +173,14 @@ const DropdownContainer: React.FC = () => {
         <ArrowIcon $isOpen={isAdvancedOpen} onClick={toggleAdvancedSettings}>
           <FontAwesomeIcon icon={isAdvancedOpen ? faCaretDown : faCaretRight} />
         </ArrowIcon>
+        <HelpIcon 
+          href="https://trymindmirror.com/help" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          aria-label="Help"
+        >
+          <FontAwesomeIcon icon={faQuestionCircle} />
+        </HelpIcon>
       </TherapyModal>
       <FloatingExpandButton 
         onClick={toggleCollapse} 

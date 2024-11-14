@@ -20,6 +20,7 @@ interface EmailModalProps {
   onForgotPassword: (email: string) => Promise<boolean>
   resetFormFields: () => void
   refreshToken: () => Promise<boolean>
+  startOnboarding: () => void
 }
 
 const EmailModal: React.FC<EmailModalProps> = ({
@@ -29,6 +30,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
   onForgotPassword,
   resetFormFields,
   refreshToken,
+  startOnboarding,
 }) => {
   const [isSignUp, setIsSignUp] = useState(true)
   const [isForgotPassword, setIsForgotPassword] = useState(false)
@@ -89,6 +91,10 @@ const EmailModal: React.FC<EmailModalProps> = ({
           localStorage.setItem('accessToken', result.tokens.access_token);
           localStorage.setItem('refreshToken', result.tokens.refresh_token);
           localStorage.setItem('accessTokenExpiration', result.tokens.access_token_expiration.toString());
+          
+          if (isSignUp) {
+            startOnboarding();
+          }
         }
         onClose()
       }

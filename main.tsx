@@ -2,11 +2,22 @@ import { Plugin, MarkdownView, TFile } from 'obsidian'
 import React from 'react'
 import { createRoot, Root } from 'react-dom/client'
 import DropdownContainer from './components/DropdownContainer'
+import Onboarding from './components/Onboarding'
 import SettingsTab from './components/SettingsTab'
 import { AppProvider } from './context/AppContext'
 import { ExtendedApp } from './types'
 import { DEFAULT_SETTINGS, MindMirrorSettings } from './settings'
 import { MindMirrorPlugin } from './types'
+
+// Create a new App component to serve as our root component
+const App: React.FC<{ plugin: MindMirrorPlugin }> = ({ plugin }) => {
+  return (
+    <AppProvider plugin={plugin}>
+      <Onboarding />
+      <DropdownContainer />
+    </AppProvider>
+  );
+};
 
 export default class MindMirrorPluginImpl extends Plugin implements MindMirrorPlugin {
   root: Root | null = null
@@ -84,21 +95,23 @@ export default class MindMirrorPluginImpl extends Plugin implements MindMirrorPl
   async onload() {
     await this.loadSettings()
     this.addSettingTab(new SettingsTab(this.app as ExtendedApp, this))
+    
+    // Create a container div using React's createRoot
     const reactContainer = document.createElement('div')
+    reactContainer.id = 'mind-mirror-root'
     document.body.appendChild(reactContainer)
+    
     this.root = createRoot(reactContainer)
-
+    
     // Check for existing auth token
     const existingToken = localStorage.getItem('accessToken')
+    console.log('Existing auth token found:', !!existingToken)
 
-    this.root.render(
-      <AppProvider plugin={this}>
-        <DropdownContainer />
-      </AppProvider>
-    )
+    // Render our App component
+    this.root.render(<App plugin={this} />)
 
     if (existingToken) {
-      // Ensure UI is visible if user is already authenticated
+      console.log('Dispatching auth-status-changed event')
       setTimeout(() => {
         const event = new CustomEvent('auth-status-changed', {
           detail: { isAuthenticated: true },

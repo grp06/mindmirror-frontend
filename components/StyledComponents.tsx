@@ -424,3 +424,67 @@ export const SignInText = styled.p`
   font-size: 0.9rem;
   color: #f0f0f0;
 `
+
+export const OnboardingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`
+
+export const OnboardingCard = styled.div`
+  background: #2c2c2c;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  color: #f0f0f0;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+`
+
+export const OnboardingTitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #f0f0f0;
+`
+
+export const OnboardingSubtitle = styled.p`
+  font-size: 16px;
+  margin-bottom: 24px;
+  color: #b0b0b0;
+  line-height: 1.5;
+`
+
+export const OnboardingButton = styled(Button)`
+  width: 200px;
+  margin: 16px auto 0;
+  padding: 12px 24px;
+  font-size: 16px;
+`
+
+export const OnboardingIcon = styled.div`
+  font-size: 48px;
+  margin-bottom: 24px;
+`
+
+export const HelpIcon = styled.a`
+  position: absolute;
+  bottom: 7px;
+  right: 5px;
+  color: #f0f0f0;
+  font-size: 20px;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+`

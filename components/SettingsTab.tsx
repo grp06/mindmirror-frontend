@@ -69,6 +69,7 @@ const SettingsTabContent: React.FC = () => {
     plugin,
     removeApiKey,
     setIsUIVisible,
+    startOnboarding,
   } = useAppContext()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -197,6 +198,7 @@ const SettingsTabContent: React.FC = () => {
         })
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
+        localStorage.removeItem('onboardingComplete')
         setAuthToken(null)
         setEmail('')
         setIsUIVisible(false)
@@ -276,6 +278,25 @@ const SettingsTabContent: React.FC = () => {
         </Button>
         <SaveButton onClick={handleSaveButtonClick}>Save Settings</SaveButton>
         {apiKey && <Button onClick={removeApiKey}>Remove API Key</Button>}
+        {authToken && (
+          <Button onClick={() => {
+            console.log('Restart Tutorial button clicked');
+            localStorage.removeItem('onboardingComplete');
+            console.log('onboardingComplete removed from localStorage');
+            startOnboarding();
+            console.log('startOnboarding called from button');
+            
+            // Dispatch auth event to trigger re-render
+            const event = new CustomEvent('auth-status-changed', {
+              detail: { isAuthenticated: true }
+            });
+            document.dispatchEvent(event);
+            
+            (plugin.app as ExtendedApp).setting.close();
+          }}>
+            Restart Tutorial
+          </Button>
+        )}
       </ButtonContainer>
       <EmailModal
         isOpen={isModalOpen}

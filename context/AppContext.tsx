@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { fetchTherapyResponse } from '../utils/fetchTherapyResponse'
 
-import { AppContextProps, AppProviderProps, ModalState } from '../types'
+import { AppContextProps, AppProviderProps, ModalState, OnboardingState, OnboardingStep } from '../types'
 
 import {
   handlePlusClick as handlePlusClickUI,
@@ -49,6 +49,68 @@ export const AppProvider: React.FC<AppProviderProps> = ({
 
   const [isUIVisible, setIsUIVisible] = useState(false)
 
+  const [onboarding, setOnboarding] = useState<OnboardingState>(() => ({
+    isComplete: localStorage.getItem('onboardingComplete') === 'true',
+    currentStep: OnboardingStep.None,
+    isVisible: false
+  }));
+
+  const startOnboarding = useCallback(() => {
+    console.log('startOnboarding called');
+    const newState = {
+      isComplete: false,
+      currentStep: OnboardingStep.Privacy,
+      isVisible: true
+    };
+    console.log('Setting new onboarding state:', newState);
+    setOnboarding(newState);
+    localStorage.setItem('onboardingComplete', 'false');
+  }, []);
+
+  const completeOnboarding = useCallback(() => {
+    const newState = {
+      isComplete: true,
+      currentStep: OnboardingStep.None,
+      isVisible: false
+    };
+    setOnboarding(newState);
+    localStorage.setItem('onboardingComplete', 'true');
+  }, []);
+
+  const updateOnboardingStep = useCallback((nextStep: OnboardingStep) => {
+    const newState = {
+      ...onboarding,
+      currentStep: nextStep,
+      isVisible: true
+    };
+    setOnboarding(newState);
+    localStorage.setItem('onboardingComplete', 'false');
+  }, [onboarding]);
+
+  useEffect(() => {
+    const handleAuthStatus = (event: CustomEvent) => {
+      console.log('Auth status changed:', event.detail);
+      console.log('Current onboarding state:', onboarding);
+      setIsUIVisible(event.detail.isAuthenticated);
+      
+      if (event.detail.isAuthenticated) {
+        const storedOnboarding = localStorage.getItem('onboardingComplete');
+        console.log('Stored onboarding state:', storedOnboarding);
+        
+        if (!storedOnboarding || !JSON.parse(storedOnboarding)) {
+          console.log('Starting onboarding flow...');
+          startOnboarding();
+        }
+      }
+    };
+
+    document.addEventListener('auth-status-changed', handleAuthStatus as EventListener);
+    
+    return () => {
+      document.removeEventListener('auth-status-changed', handleAuthStatus as EventListener);
+    };
+  }, [startOnboarding]);
+
   const removeApiKey = useCallback(() => {
     setApiKey('')
     plugin.settings.apiKey = ''
@@ -65,18 +127,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   useEffect(() => {
     setIsUIVisible(!!authToken);
   }, [authToken]);
-
-  useEffect(() => {
-    const handleAuthStatus = (event: CustomEvent) => {
-      setIsUIVisible(event.detail.isAuthenticated);
-    };
-
-    document.addEventListener('auth-status-changed', handleAuthStatus as EventListener);
-    
-    return () => {
-      document.removeEventListener('auth-status-changed', handleAuthStatus as EventListener);
-    };
-  }, []);
 
   // migiht be able to delete
   // we were doing this because we wanted to constantly update that progress bar but we got rid of it.
@@ -261,6 +311,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({
         vibe,
         isUIVisible,
         setIsUIVisible,
+        onboarding,
+        startOnboarding,
+        completeOnboarding,
+        updateOnboardingStep,
       }}
     >
       {children}

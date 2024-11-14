@@ -2,7 +2,7 @@
 import { MindMirrorSettings } from './settings'
 
 // Temporary override for testing production endpoints
-export const FORCE_PRODUCTION = false
+export const FORCE_PRODUCTION = true
 
 export const getApiBaseUrl = (settings: MindMirrorSettings): string => {
   if (!settings?.apiEndpoints) {

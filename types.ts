@@ -15,6 +15,21 @@ export enum ModalState {
   Show,
   Hide,
 }
+
+export enum OnboardingStep {
+  None,
+  Privacy,
+  Usage,
+  Emotions,
+  Complete,
+}
+
+export interface OnboardingState {
+  isComplete: boolean;
+  currentStep: OnboardingStep;
+  isVisible: boolean;
+}
+
 export interface AppContextProps {
   apiKey: string
   authMessage: string
@@ -79,6 +94,10 @@ export interface AppContextProps {
   vibe: string
   isUIVisible: boolean
   setIsUIVisible: (isVisible: boolean) => void
+  onboarding: OnboardingState;
+  startOnboarding: () => void;
+  completeOnboarding: () => void;
+  updateOnboardingStep: (nextStep: OnboardingStep) => void;
 }
 
 export interface AppProviderProps {
