@@ -30,6 +30,8 @@ const context = await esbuild.context({
 		'@lezer/common',
 		'@lezer/highlight',
 		'@lezer/lr',
+		'electron-devtools-installer',
+		'electron/*',
 		...builtins,
 	],
 	format: 'cjs',

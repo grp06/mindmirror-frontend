@@ -1,4 +1,4 @@
-import { Plugin, MarkdownView, TFile } from 'obsidian'
+import { Plugin, MarkdownView, TFile, requestUrl } from 'obsidian'
 import React from 'react'
 import { createRoot, Root } from 'react-dom/client'
 import DropdownContainer from './components/DropdownContainer'
@@ -106,12 +106,10 @@ export default class MindMirrorPluginImpl extends Plugin implements MindMirrorPl
     // Check for existing auth token
     const existingToken = localStorage.getItem('accessToken')
     
-
     // Render our App component
     this.root.render(<App plugin={this} />)
 
     if (existingToken) {
-      
       setTimeout(() => {
         const event = new CustomEvent('auth-status-changed', {
           detail: { isAuthenticated: true },
@@ -131,5 +129,26 @@ export default class MindMirrorPluginImpl extends Plugin implements MindMirrorPl
 
   setAuthMessage(message: string) {
     this.authMessage = message
+  }
+}
+
+async function loggedRequest(options: any) {
+  console.log('Request:', {
+    url: options.url,
+    method: options.method,
+    headers: options.headers,
+    body: options.body
+  });
+  
+  try {
+    const response = await requestUrl(options);
+    console.log('Response:', {
+      status: response.status,
+      data: response.json
+    });
+    return response;
+  } catch (error) {
+    console.error('Request failed:', error);
+    throw error;
   }
 }

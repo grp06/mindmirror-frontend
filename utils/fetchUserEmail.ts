@@ -1,34 +1,60 @@
 import { getApiBaseUrl } from '@/constants'
 import { Notice, requestUrl } from 'obsidian'
 import { MindMirrorPlugin } from '../types'
+import { logRequest, logResponse, logError, loggedRequest } from './debugUtils'
 
 export async function fetchUserEmail(
   authToken: string | null,
   setAuthToken: (token: string | null) => void,
   setEmail: (email: string) => void,
-  plugin: MindMirrorPlugin
+  plugin: MindMirrorPlugin,
+  setReflectionsCount?: (count: number) => void
 ): Promise<void> {
-  if (authToken) {
-    try {
-      const apiBaseUrl = getApiBaseUrl(plugin.settings)
-      const response = await requestUrl({
-        url: `${apiBaseUrl}/api/user_info/`,
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
+  if (!authToken) {
+    return;
+  }
 
-      if (response.status === 200) {
-        setEmail(response.json.email)
-      } else {
-        setAuthToken(null)
-        setEmail('')
-        new Notice('Failed to fetch user email')
+  try {
+    const apiBaseUrl = getApiBaseUrl(plugin.settings)
+    const url = `${apiBaseUrl}/api/user_info/`
+    
+    const options = {
+      url,
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+    
+    const response = await loggedRequest(options)
+
+    if (response.status === 200) {
+      setEmail(response.json.email)
+      plugin.settings.email = response.json.email
+      
+      if (setReflectionsCount && response.json.reflections_count !== undefined) {
+        setReflectionsCount(response.json.reflections_count)
+        plugin.settings.reflectionsCount = response.json.reflections_count
       }
-    } catch (error) {
+      
+      await plugin.saveSettings()
+    } else {
       setAuthToken(null)
       setEmail('')
-      new Notice('Error fetching user email')
+      if (setReflectionsCount) {
+        setReflectionsCount(0)
+      }
+      plugin.settings.email = ''
+      plugin.settings.reflectionsCount = 0
+      await plugin.saveSettings()
     }
+  } catch (error) {
+    setAuthToken(null)
+    setEmail('')
+    plugin.settings.email = ''
+    plugin.settings.reflectionsCount = 0
+    await plugin.saveSettings()
   }
 }

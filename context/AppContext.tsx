@@ -55,6 +55,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({
     isVisible: false
   }));
 
+  const [reflectionsCount, setReflectionsCount] = useState<number>(0)
+
   const startOnboarding = useCallback(() => {
     const newState = {
       isComplete: false,
@@ -142,6 +144,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({
 
       setResult(result.content)
       setModalState(ModalState.Show)
+      if (result.reflections_count !== undefined) {
+        setReflectionsCount(result.reflections_count)
+      }
     } catch (error) {
       setErrorMessage(error.message || 'Failed to generate response')
     } finally {
@@ -308,6 +313,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({
         startOnboarding,
         completeOnboarding,
         updateOnboardingStep,
+        reflectionsCount,
+        setReflectionsCount,
       }}
     >
       {children}

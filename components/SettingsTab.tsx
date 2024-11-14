@@ -126,14 +126,24 @@ const SettingsTabContent: React.FC = () => {
     removeApiKey,
     setIsUIVisible,
     startOnboarding,
+    reflectionsCount,
+    setReflectionsCount,
   } = useAppContext()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [reflectionsCount, setReflectionsCount] = useState<number>(0)
 
   useEffect(() => {
-    fetchUserEmail(authToken, setAuthToken, setEmail, plugin)
-  }, [authToken, setAuthToken, setEmail, plugin])
+    const storedToken = localStorage.getItem('accessToken')
+    if (storedToken && (!authToken || storedToken !== authToken)) {
+      setAuthToken(storedToken)
+    }
+    if (authToken) {
+      if (plugin.settings.email) {
+        setEmail(plugin.settings.email)
+      }
+      fetchUserEmail(authToken, setAuthToken, setEmail, plugin)
+    }
+  }, [authToken])
 
   useEffect(() => {
     const fetchUserStats = async () => {
@@ -148,7 +158,9 @@ const SettingsTabContent: React.FC = () => {
           })
 
           if (response.status === 200) {
-            setReflectionsCount(response.json.reflections_count || 0)
+            console.log('Full response:', response)
+            const data = response.json
+            setReflectionsCount(data.reflections_count || 0)
           }
         } catch (error) {
           console.error('Failed to fetch user stats:', error)
@@ -157,7 +169,7 @@ const SettingsTabContent: React.FC = () => {
     }
 
     fetchUserStats()
-  }, [authToken])
+  }, [authToken, setReflectionsCount])
 
   const handleSaveButtonClick = async () => {
     plugin.settings.apiKey = apiKey
@@ -294,14 +306,6 @@ const SettingsTabContent: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('accessToken')
-    if (storedToken) {
-      setAuthToken(storedToken)
-      fetchUserEmail(storedToken, setAuthToken, setEmail, plugin)
-    }
-  }, [])
-
   const handleCloseModal = () => {
     setIsModalOpen(false)
     ;(plugin.app as ExtendedApp).setting.close()
@@ -361,7 +365,7 @@ const SettingsTabContent: React.FC = () => {
     {
       question: 'Is my data private and secure?',
       answer:
-        'Yes, your privacy is our top priority. All journal entries are encrypted, and we never share your personal data with third parties. You have complete control over your data, including the ability to delete it at any time.',
+        'Yes, your privacy is our top priority. We never store your journal entries - they are only sent directly to OpenAI for processing and then discarded. You maintain complete control over your data at all times.',
     },
     {
       question: 'How much does Mind Mirror cost?',

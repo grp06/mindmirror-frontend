@@ -6,6 +6,8 @@ export interface MindMirrorSettings {
     development: string
     production: string
   }
+  email?: string
+  reflectionsCount?: number
 }
 
 export const DEFAULT_SETTINGS: MindMirrorSettings = {
@@ -15,4 +17,6 @@ export const DEFAULT_SETTINGS: MindMirrorSettings = {
     development: 'http://localhost:8000',
     production: 'https://api.trymindmirror.com',
   },
+  email: '',
+  reflectionsCount: 0
 }

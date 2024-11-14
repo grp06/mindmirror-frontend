@@ -1,6 +1,6 @@
 import { FetchTherapyResponseParams, TherapyResponse } from '../types'
 import MindMirrorPlugin from '../main'
-import { requestUrl } from 'obsidian'
+import { loggedRequest } from '../utils/debugUtils'
 import { getApiBaseUrl } from '../constants'
 
 export async function fetchTherapyResponse({
@@ -25,7 +25,7 @@ export async function fetchTherapyResponse({
       Authorization: authToken ? `Bearer ${authToken}` : `Bearer ${userApiKey}`,
     }
 
-    const response = await requestUrl({
+    const response = await loggedRequest({
       url: apiUrl,
       method: 'POST',
       headers: headers,
@@ -36,8 +36,6 @@ export async function fetchTherapyResponse({
         vibe: vibe,
         user_api_key: userApiKey,
       }),
-    }).catch((error) => {
-      throw error
     })
 
     const data = response.json

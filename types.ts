@@ -98,6 +98,8 @@ export interface AppContextProps {
   startOnboarding: () => void;
   completeOnboarding: () => void;
   updateOnboardingStep: (nextStep: OnboardingStep) => void;
+  reflectionsCount: number
+  setReflectionsCount: (count: number) => void
 }
 
 export interface AppProviderProps {
