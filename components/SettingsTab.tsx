@@ -45,6 +45,34 @@ const StyledNotice = styled.div`
   }
 `
 
+const HelpSection = styled.div`
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--background-modifier-border);
+`
+
+const FAQItem = styled.div`
+  margin-bottom: 24px;
+`
+
+const Question = styled.h3`
+  color: var(--text-normal);
+  margin-bottom: 8px;
+  font-size: 1.1em;
+`
+
+const Answer = styled.div`
+  color: var(--text-muted);
+  
+  ol {
+    margin-left: 20px;
+  }
+  
+  li {
+    margin-bottom: 4px;
+  }
+`
+
 const showCustomNotice = (message: string) => {
   const notice = document.createElement('div')
   const root = createRoot(notice)
@@ -259,6 +287,42 @@ const SettingsTabContent: React.FC = () => {
     }
   }
 
+  const faqData = [
+    {
+      question: 'How do I get started?',
+      answer: [
+        'Download and install Obsidian from their official website',
+        'Open Obsidian and go to Settings',
+        'Navigate to the "Community Plugins" tab',
+        'Click the purple "Browse" button',
+        'Search for "Mind Mirror" and install the plugin',
+        'In Obsidian settings, scroll down the left sidebar to find "Mind Mirror"',
+        'Click on Mind Mirror and create your account',
+        'Start using Mind Mirror for free!'
+      ],
+    },
+    {
+      question: 'What is Mind Mirror?',
+      answer: "Mind Mirror is an AI-powered journaling companion that provides insights and reflections based on your writing. It's designed to enhance your self-reflection practice with customizable therapy styles and approaches.",
+    },
+    {
+      question: 'How does Mind Mirror work?',
+      answer: 'Mind Mirror uses advanced AI to analyze your journal entries and provide thoughtful responses based on your chosen therapy style. Simply write your thoughts, and Mind Mirror will offer insights, questions, and perspectives to help deepen your self-reflection practice.',
+    },
+    {
+      question: 'Is my data private and secure?',
+      answer: 'Yes, your privacy is our top priority. All journal entries are encrypted, and we never share your personal data with third parties. You have complete control over your data, including the ability to delete it at any time.',
+    },
+    {
+      question: 'How much does Mind Mirror cost?',
+      answer: "Mind Mirror offers a free tier with basic features and a premium subscription for advanced features. Visit our pricing page for detailed information about our subscription plans and what's included in each tier.",
+    },
+    {
+      question: 'Using Your Own OpenAI API Key',
+      answer: "You can use Mind Mirror with your own OpenAI API key for unlimited usage, or use our provided API key for limited free access. To use your own key, simply paste it in the field above and click 'Save Settings'."
+    }
+  ]
+
   return (
     <Wrapper>
       <InputItem>
@@ -308,8 +372,28 @@ const SettingsTabContent: React.FC = () => {
           setError('')
         }}
         refreshToken={refreshToken}
+        startOnboarding={startOnboarding}
       />
       {authToken && <EmailDisplay>Signed in as: {email}</EmailDisplay>}
+      
+      <HelpSection>
+        {faqData.map((item, index) => (
+          <FAQItem key={index}>
+            <Question>{item.question}</Question>
+            <Answer>
+              {Array.isArray(item.answer) ? (
+                <ol>
+                  {item.answer.map((step, i) => (
+                    <li key={i}>{step}</li>
+                  ))}
+                </ol>
+              ) : (
+                <p>{item.answer}</p>
+              )}
+            </Answer>
+          </FAQItem>
+        ))}
+      </HelpSection>
     </Wrapper>
   )
 }
