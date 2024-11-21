@@ -10,7 +10,6 @@ import {
   Input,
   ButtonContainer,
   Button,
-  SaveButton,
   EmailDisplay,
 } from './StyledComponents'
 import { fetchUserEmail } from '../utils/fetchUserEmail'
@@ -86,7 +85,7 @@ const StatItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 4px 0;
-  
+
   &:not(:last-child) {
     border-bottom: 1px solid var(--background-modifier-border);
   }
@@ -138,13 +137,12 @@ const SettingsTabContent: React.FC = () => {
       setAuthToken(storedToken)
     }
     if (authToken && !email) {
-      fetchUserEmail(authToken, setAuthToken, setEmail, plugin)
-        .catch(() => {
-          localStorage.removeItem('accessToken')
-          localStorage.removeItem('refreshToken')
-          setAuthToken(null)
-          setEmail('')
-        })
+      fetchUserEmail(authToken, setAuthToken, setEmail, plugin).catch(() => {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        setAuthToken(null)
+        setEmail('')
+      })
     }
   }, [authToken])
 
@@ -179,11 +177,12 @@ const SettingsTabContent: React.FC = () => {
     fetchUserStats()
   }, [authToken])
 
-  const handleSaveButtonClick = async () => {
-    plugin.settings.apiKey = apiKey
-    await plugin.saveSettings()
-    ;(plugin.app as ExtendedApp).setting.close()
-  }
+  useEffect(() => {
+    if (apiKey !== undefined) {
+      plugin.settings.apiKey = apiKey
+      plugin.saveSettings()
+    }
+  }, [apiKey])
 
   const handleRemoveApiKey = () => {
     removeApiKey()
@@ -221,7 +220,7 @@ const SettingsTabContent: React.FC = () => {
       const data = response.json
 
       if (data.access_token && data.refresh_token) {
-        localStorage.setItem('accessToken', data.access_token)
+        localStorage.setItem('mindMirrorAccessToken', data.access_token)
         localStorage.setItem('refreshToken', data.refresh_token)
         setAuthToken(data.access_token)
         setEmail('')
@@ -336,7 +335,7 @@ const SettingsTabContent: React.FC = () => {
 
       const data = response.json
       if (data.access) {
-        localStorage.setItem('accessToken', data.access)
+        localStorage.setItem('mindMirrorAccessToken', data.access)
         setAuthToken(data.access)
         return true
       }
@@ -404,7 +403,6 @@ const SettingsTabContent: React.FC = () => {
         <Button onClick={handleAuthButtonClick}>
           {authToken ? 'Sign Out' : 'Sign up or Sign in'}
         </Button>
-        <SaveButton onClick={handleSaveButtonClick}>Save Settings</SaveButton>
         {apiKey && <Button onClick={removeApiKey}>Remove API Key</Button>}
         {authToken && (
           <Button
@@ -417,7 +415,6 @@ const SettingsTabContent: React.FC = () => {
                 detail: { isAuthenticated: true },
               })
               document.dispatchEvent(event)
-
               ;(plugin.app as ExtendedApp).setting.close()
             }}
           >

@@ -7,10 +7,10 @@ Mind Mirror is a powerful AI journaling tool that provides real-time feedback an
 ## Privacy & Data Handling
 
 **Your Privacy is Our Priority:**
-- All data processing is done directly through OpenAI's API
 - No data is collected, stored, or processed on our servers
 - Your journal entries are only temporarily sent to OpenAI for processing and are not retained
-- Your OpenAI API key remains on your device and is never transmitted to our servers
+- You can use either your personal OpenAI API key or Mind Mirror's API key
+- When using Mind Mirror's API key, your data is simply passed through to OpenAI and returned to your local Obsidian app without being stored
 
 ## Getting Started
 

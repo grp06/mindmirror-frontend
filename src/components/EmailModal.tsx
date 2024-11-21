@@ -15,8 +15,15 @@ interface EmailModalProps {
   onSubmit: (
     username: string,
     password: string,
-    isSignUp: boolean,
-  ) => Promise<{ success: boolean; tokens?: { access_token: string; refresh_token: string; access_token_expiration: number } }>
+    isSignUp: boolean
+  ) => Promise<{
+    success: boolean
+    tokens?: {
+      access_token: string
+      refresh_token: string
+      access_token_expiration: number
+    }
+  }>
   onForgotPassword: (email: string) => Promise<boolean>
   resetFormFields: () => void
   refreshToken: () => Promise<boolean>
@@ -41,20 +48,22 @@ const EmailModal: React.FC<EmailModalProps> = ({
 
   useEffect(() => {
     const checkTokenExpiration = async () => {
-      const expirationTime = localStorage.getItem('accessTokenExpiration');
+      const expirationTime = localStorage.getItem(
+        'mindMirrorAccessTokenExpiration'
+      )
       if (expirationTime && Date.now() >= parseInt(expirationTime)) {
-        const success = await refreshToken();
+        const success = await refreshToken()
         if (!success) {
           // Handle refresh failure (e.g., show login modal)
-          onClose();
+          onClose()
         }
       }
-    };
+    }
 
-    const intervalId = setInterval(checkTokenExpiration, 60000); // Check every minute
+    const intervalId = setInterval(checkTokenExpiration, 60000) // Check every minute
 
-    return () => clearInterval(intervalId);
-  }, [refreshToken, onClose]);
+    return () => clearInterval(intervalId)
+  }, [refreshToken, onClose])
 
   if (!isOpen) return null
 
@@ -88,12 +97,18 @@ const EmailModal: React.FC<EmailModalProps> = ({
         setError('')
         resetFormFields()
         if (result.tokens) {
-          localStorage.setItem('accessToken', result.tokens.access_token);
-          localStorage.setItem('refreshToken', result.tokens.refresh_token);
-          localStorage.setItem('accessTokenExpiration', result.tokens.access_token_expiration.toString());
-          
+          localStorage.setItem(
+            'mindMirrorAccessToken',
+            result.tokens.access_token
+          )
+          localStorage.setItem('refreshToken', result.tokens.refresh_token)
+          localStorage.setItem(
+            'mindMirrorAccessTokenExpiration',
+            result.tokens.access_token_expiration.toString()
+          )
+
           if (isSignUp) {
-            startOnboarding();
+            startOnboarding()
           }
         }
         onClose()
@@ -117,7 +132,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
     if (isForgotPassword) {
       return (
         <>
-          <h2>Forgot Password</h2>
+          <h2>Forgot password</h2>
           <Input
             type="email"
             placeholder="Enter your email"
@@ -131,7 +146,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
               Reset Password
             </Button>
             <Button onClick={() => setIsForgotPassword(false)}>
-              Back to Sign In
+              Back to sign in
             </Button>
           </ButtonContainer>
         </>
@@ -140,7 +155,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
 
     return (
       <>
-        <h2>{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
+        <h2>{isSignUp ? 'Sign up' : 'Sign in'}</h2>
         <Input
           type="email"
           placeholder="Enter your email"
@@ -169,14 +184,14 @@ const EmailModal: React.FC<EmailModalProps> = ({
         )}
         <ButtonContainer>
           <Button onClick={handleSubmit} disabled={isSignUpDisabled}>
-            {isSignUp ? 'Sign Up' : 'Sign In'}
+            {isSignUp ? 'Sign up' : 'Sign in'}
           </Button>
           <Button onClick={() => setIsSignUp(!isSignUp)}>
-            Switch to {isSignUp ? 'Sign In' : 'Sign Up'}
+            Switch to {isSignUp ? 'sign in' : 'sign up'}
           </Button>
           {!isSignUp && (
             <Button onClick={() => setIsForgotPassword(true)}>
-              Forgot Password
+              Forgot password
             </Button>
           )}
         </ButtonContainer>

@@ -24,28 +24,28 @@ const Onboarding: React.FC = () => {
     switch (onboarding.currentStep) {
       case OnboardingStep.Privacy:
         return {
-          title: 'Your Privacy Matters',
+          title: 'Your privacy matters',
           subtitle:
             'Your journal entries are only sent to OpenAI for processing and are never stored on our servers',
           icon: '🔒',
         }
       case OnboardingStep.Usage:
         return {
-          title: 'How to Use MindMirror',
+          title: 'How to use MindMirror',
           subtitle:
             'Write in your Daily Note and click refresh for AI feedback. Open the menu in the bottom right to customize your experience - choose different therapy styles, insight types, and adjust the tone of your feedback.',
           icon: '💡',
         }
       case OnboardingStep.Emotions:
         return {
-          title: 'Track Your Emotions',
+          title: 'Track your emotions',
           subtitle:
             'Click the heart icon in the bottom right corner to open the emotions bar. Your selected emotions will be integrated into your therapy insights for more personalized feedback.',
           icon: '❤️',
         }
       case OnboardingStep.Complete:
         return {
-          title: "You're All Set!",
+          title: "You're all set!",
           subtitle: `Start journaling now, or navigate to previous entries using dates like ${today} in Obsidian's left sidebar`,
           icon: '✨',
         }

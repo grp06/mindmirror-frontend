@@ -94,7 +94,7 @@ const DropdownContainer: React.FC = () => {
           {isCollapsed ? '↙' : '↘'}
         </CollapseButton>
         <CustomizableDropdown
-          label="Type of Therapy"
+          label="Type of therapy"
           options={therapyTypes}
           value={therapyType}
           onChange={(value) =>
@@ -106,7 +106,7 @@ const DropdownContainer: React.FC = () => {
           placeholder="Enter your own therapy type"
         />
         <CustomizableDropdown
-          label="Insight Filters"
+          label="Insight filters"
           options={insightFilters}
           value={insightFilter}
           onChange={(value) =>
@@ -146,7 +146,7 @@ const DropdownContainer: React.FC = () => {
               </Select>
             </InputItem>
             <InputItem>
-              <Label htmlFor="note-range-dropdown">Note Range</Label>
+              <Label htmlFor="note-range-dropdown">Note range</Label>
               <Select
                 id="note-range-dropdown"
                 value={noteRange}
@@ -157,7 +157,7 @@ const DropdownContainer: React.FC = () => {
                 <option value="last3">Last 3 notes</option>
                 <option value="last5">Last 5 notes</option>
                 <option value="last10">Last 10 notes</option>
-                <option value="last20">Last 20 notes</option>{' '}
+                <option value="last20">Last 20 notes</option>
                 <option value="last50">Last 50 notes</option>
               </Select>
             </InputItem>
@@ -168,7 +168,7 @@ const DropdownContainer: React.FC = () => {
           🫀
         </EmotionsActionButton>
         <AdvancedText>
-          {isAdvancedOpen ? 'hide' : 'show'} advanced options
+          {isAdvancedOpen ? 'Hide' : 'Show'} advanced options
         </AdvancedText>
         <ArrowIcon $isOpen={isAdvancedOpen} onClick={toggleAdvancedSettings}>
           <FontAwesomeIcon icon={isAdvancedOpen ? faCaretDown : faCaretRight} />
