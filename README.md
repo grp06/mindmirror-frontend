@@ -52,3 +52,7 @@ Mind Mirror is a powerful AI journaling tool that provides real-time feedback an
    - Press the "+" button to append the AI response to the bottom of the current note
 
 All interactions with the AI are processed securely through OpenAI's API, ensuring your personal data remains private and protected.
+
+# Screenshots
+
+![Screenshot 1](./src/assets/screenshot.png)
